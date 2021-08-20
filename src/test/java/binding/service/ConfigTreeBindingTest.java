@@ -51,15 +51,21 @@ final class ConfigTreeBindingTest {
     }
 
     @Test
-    @DisplayName("returns bytes")
-    void bytes() {
-        assertThat(binding.getAsBytes("test-secret-key")).isEqualTo("test-secret-value\n".getBytes(StandardCharsets.UTF_8));
+    @DisplayName("returns null for directory")
+    void directory() {
+        assertThat(binding.get(".hidden-data")).isNull();
     }
 
     @Test
-    @DisplayName("throws exception for directory")
-    void directory() {
-        assertThatIllegalArgumentException().isThrownBy(() -> binding.get(".hidden-data"));
+    @DisplayName("returns null for invalid key")
+    void invalidKey() {
+        assertThat(binding.get("test^invalid^key")).isNull();
+    }
+
+    @Test
+    @DisplayName("returns bytes")
+    void bytes() {
+        assertThat(binding.getAsBytes("test-secret-key")).isEqualTo("test-secret-value\n".getBytes(StandardCharsets.UTF_8));
     }
 
 }

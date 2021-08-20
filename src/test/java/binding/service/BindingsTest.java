@@ -20,11 +20,14 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import jdk.jfr.Timestamp;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -32,6 +35,19 @@ import static org.assertj.core.api.Assertions.assertThat;
 final class BindingsTest {
 
     private final Path root = Paths.get("src/test/resources");
+
+    @Test
+    @DisplayName("wraps with cached binding")
+    void cached() {
+        Binding[] bindings = Bindings.cached(new Binding[]{
+            new MapBinding("test-name-1", Collections.emptyMap())
+        });
+
+        for (Binding binding : bindings) {
+            assertThat(binding).isInstanceOf(CacheBinding.class);
+        }
+
+    }
 
     @Nested
     @DisplayName("from")
@@ -46,13 +62,7 @@ final class BindingsTest {
         @Test
         @DisplayName("empty if path is not a directory")
         void nonDirectory() throws IOException {
-            Path path = File.createTempFile("bindings", "").toPath();
-
-            try {
-                assertThat(Bindings.from(path)).isEmpty();
-            } finally {
-                Files.delete(path);
-            }
+            assertThat(Bindings.from(Paths.get("testdata", "additional-file"))).isEmpty();
         }
 
         @Test
@@ -94,9 +104,15 @@ final class BindingsTest {
         }
 
         @Test
-        @DisplayName("filters bindings by kind")
-        void filterByKind() {
+        @DisplayName("filters bindings by type")
+        void filterByType() {
             assertThat(Bindings.filter(bindings, "test-type-1", null)).hasSize(1);
+        }
+
+        @Test
+        @DisplayName("filters bindings by type and provider")
+        void filterByTypeAndProvider() {
+            assertThat(Bindings.filter(bindings, "test-type-1", "test-provider-1")).hasSize(1);
         }
 
         @Test

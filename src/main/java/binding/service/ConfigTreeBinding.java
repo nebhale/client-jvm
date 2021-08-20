@@ -58,7 +58,7 @@ public final class ConfigTreeBinding implements Binding {
         }
 
         if (!Files.isRegularFile(path)) {
-            throw new IllegalArgumentException(String.format("'%s' is not a regular file", path));
+            return null;
         }
 
         try {

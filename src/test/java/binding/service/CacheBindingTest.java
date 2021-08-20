@@ -22,6 +22,14 @@ final class CacheBindingTest {
     }
 
     @Test
+    @DisplayName("not cache unknown keys")
+    void unknownKey() {
+        assertThat(binding.get("test-unknown-key")).isNull();
+        assertThat(binding.get("test-unknown-key")).isNull();
+        assertThat(stub.getAsBytesCount).isEqualTo(2);
+    }
+
+    @Test
     @DisplayName("returns cached value")
     void cachedValue() {
         assertThat(binding.get("test-key")).isNotNull();
@@ -47,7 +55,12 @@ final class CacheBindingTest {
         @Override
         public byte[] getAsBytes(@NotNull String key) {
             getAsBytesCount++;
-            return new byte[0];
+
+            if ("test-key".equals(key)) {
+                return new byte[0];
+            }
+
+            return null;
         }
 
         @NotNull

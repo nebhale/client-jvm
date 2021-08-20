@@ -55,6 +55,12 @@ final class MapBindingTest {
     }
 
     @Test
+    @DisplayName("returns null for invalid key")
+    void invalidKey() {
+        assertThat(binding.get("test^invalid^key")).isNull();
+    }
+
+    @Test
     @DisplayName("returns bytes")
     void bytes() {
         assertThat(binding.getAsBytes("test-secret-key")).isEqualTo("test-secret-value\n".getBytes(StandardCharsets.UTF_8));
