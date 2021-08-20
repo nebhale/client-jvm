@@ -63,6 +63,7 @@ public final class MapBinding implements Binding {
         return name;
     }
 
+    @Generated
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -71,11 +72,14 @@ public final class MapBinding implements Binding {
         return name.equals(that.name);
     }
 
+    @Generated
     @Override
     public int hashCode() {
         return Objects.hash(name);
     }
 
+    @Generated
+    @NotNull
     @Override
     public String toString() {
         return "MapBinding{" +

@@ -53,6 +53,7 @@ public final class CacheBinding implements Binding {
         return delegate.getName();
     }
 
+    @Generated
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -61,11 +62,14 @@ public final class CacheBinding implements Binding {
         return delegate.equals(that.delegate);
     }
 
+    @Generated
     @Override
     public int hashCode() {
         return Objects.hash(delegate);
     }
 
+    @Generated
+    @NotNull
     @Override
     public String toString() {
         return "CacheBinding{" +

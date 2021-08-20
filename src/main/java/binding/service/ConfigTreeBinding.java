@@ -74,6 +74,7 @@ public final class ConfigTreeBinding implements Binding {
         return root.getFileName().toString();
     }
 
+    @Generated
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -82,11 +83,13 @@ public final class ConfigTreeBinding implements Binding {
         return root.equals(binding.root);
     }
 
+    @Generated
     @Override
     public int hashCode() {
         return java.util.Objects.hash(root);
     }
 
+    @Generated
     @NotNull
     @Override
     public String toString() {
