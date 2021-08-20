@@ -1,8 +1,6 @@
 # client-java
 
 [![Tests](https://github.com/nebhale/client-java/workflows/Tests/badge.svg?branch=main)](https://github.com/nebhale/client-java/actions/workflows/tests.yaml)
-[![GoDoc](https://godoc.org/github.com/nebhale/client-java?status.svg)](https://godoc.org/github.com/nebhale/client-java)
-[![Go Report Card](https://goreportcard.com/badge/github.com/nebhale/client-java)](https://goreportcard.com/report/github.com/nebhale/client-java)
 [![codecov](https://codecov.io/gh/nebhale/client-java/branch/main/graph/badge.svg)](https://codecov.io/gh/nebhale/client-java)
 
 `client-java` is a library to access [Service Binding Specification for Kubernetes](https://k8s-service-bindings.github.io/spec/) conformant Service Binding [Workload Projections](https://k8s-service-bindings.github.io/spec/#workload-projection).
