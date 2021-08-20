@@ -62,7 +62,7 @@ final class BindingsTest {
         @Test
         @DisplayName("empty if path is not a directory")
         void nonDirectory() throws IOException {
-            assertThat(Bindings.from(Paths.get("additional-file"))).isEmpty();
+            assertThat(Bindings.from(root.resolve("additional-file"))).isEmpty();
         }
 
         @Test
