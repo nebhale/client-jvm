@@ -62,13 +62,25 @@ final class BindingsTest {
         @Test
         @DisplayName("empty if path is not a directory")
         void nonDirectory() throws IOException {
-            assertThat(Bindings.from(Paths.get("testdata", "additional-file"))).isEmpty();
+            assertThat(Bindings.from(Paths.get("additional-file"))).isEmpty();
         }
 
         @Test
         @DisplayName("populates content")
         void construct() {
             assertThat(Bindings.from(root)).hasSize(3);
+        }
+
+    }
+
+    @Nested
+    @DisplayName("from service binding root")
+    final class FromServiceBindingRoot {
+
+        @Test
+        @DisplayName("populates content")
+        void construct() {
+            assertThat(Bindings.fromServiceBindingRoot()).hasSize(3);
         }
 
     }
@@ -106,7 +118,7 @@ final class BindingsTest {
         @Test
         @DisplayName("filters bindings by type")
         void filterByType() {
-            assertThat(Bindings.filter(bindings, "test-type-1", null)).hasSize(1);
+            assertThat(Bindings.filter(bindings, "test-type-1")).hasSize(1);
         }
 
         @Test
