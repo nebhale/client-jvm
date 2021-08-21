@@ -20,14 +20,13 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import jdk.jfr.Timestamp;
-
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collections;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -78,9 +77,40 @@ final class BindingsTest {
     final class FromServiceBindingRoot {
 
         @Test
+        @DisplayName("empty if not set")
+        void empty() {
+            assertThat(Bindings.fromServiceBindingRoot()).isEmpty();
+        }
+
+        @Test
         @DisplayName("populates content")
-        void construct() {
-            assertThat(Bindings.fromServiceBindingRoot()).hasSize(3);
+        void construct() throws Exception {
+            String old = System.getenv("SERVICE_BINDING_ROOT");
+            getModifiableEnvironment().put("SERVICE_BINDING_ROOT", root.toString());
+
+            try {
+                assertThat(Bindings.fromServiceBindingRoot()).hasSize(3);
+            } finally {
+                if (old != null) {
+                    getModifiableEnvironment().put("SERVICE_BINDING_ROOT", old);
+                } else {
+                    getModifiableEnvironment().remove("SERVICE_BINDING_ROOT");
+                }
+            }
+        }
+
+        @SuppressWarnings("unchecked")
+        private Map<String, String> getModifiableEnvironment() throws Exception {
+            Class<?> pe = Class.forName("java.lang.ProcessEnvironment");
+            Method getenv = pe.getDeclaredMethod("getenv");
+            getenv.setAccessible(true);
+
+            Object unmodifiableEnvironment = getenv.invoke(null);
+            Class<?> map = Class.forName("java.util.Collections$UnmodifiableMap");
+            Field m = map.getDeclaredField("m");
+            m.setAccessible(true);
+
+            return (Map<String, String>) m.get(unmodifiableEnvironment);
         }
 
     }

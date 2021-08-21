@@ -28,8 +28,6 @@ tasks.jacocoTestReport {
 }
 
 tasks.test {
-    environment("SERVICE_BINDING_ROOT", "src/test/resources")
-
     useJUnitPlatform()
     finalizedBy(tasks.jacocoTestReport)
 }
