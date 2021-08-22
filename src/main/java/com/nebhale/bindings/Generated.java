@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package binding.service;
+package com.nebhale.bindings;
 
 import static java.lang.annotation.ElementType.CONSTRUCTOR;
 import static java.lang.annotation.ElementType.FIELD;

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package binding.service;
+package com.nebhale.bindings;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -60,6 +60,7 @@ public final class Bindings {
      * collection is returned.
      *
      * @param root the root to populate the {@link Binding}s from
+     * @return a collection of {@link Binding}s
      */
     @NotNull
     public static Binding[] from(@NotNull Path root) {
@@ -84,7 +85,10 @@ public final class Bindings {
      * Creates a new collection of {@link Binding}s using the {@code $SERVICE_BINDING_ROOT} environment variable to
      * determine the file system root.  If the {@code $SERVICE_BINDING_ROOT} environment variables is not set, an empty
      * collection is returned. If the directory does not exist, an empty collection is returned.
+     *
+     * @return a collection of {@link Binding}s
      */
+    @NotNull
     public static Binding[] fromServiceBindingRoot() {
         String root = System.getenv(SERVICE_BINDING_ROOT);
         if (root == null) {

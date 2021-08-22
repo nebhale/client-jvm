@@ -14,43 +14,53 @@
  * limitations under the License.
  */
 
-package binding.service;
+package com.nebhale.bindings;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
 /**
- * An implementation of {@link Binding} that caches values once they've been retrieved.
+ * An implementation of {@link Binding} that returns values from a {@link Map}.
  */
-public final class CacheBinding implements Binding {
+public final class MapBinding implements Binding {
 
-    private final Binding delegate;
+    private final String name;
 
-    private final Map<String, byte[]> cache = new HashMap<>();
+    private final Map<String, byte[]> content;
 
     /**
-     * Creates a new {@code CacheBinding} instance.
+     * Creates a new {@code MapBinding} instance.
      *
-     * @param delegate the {@link Binding} used to retrieve original values
+     * @param name    the name of the binding
+     * @param content the content of the binding
      */
-    public CacheBinding(@NotNull Binding delegate) {
-        this.delegate = delegate;
+    public MapBinding(@NotNull String name, @NotNull Map<String, byte[]> content) {
+        Assert.notNull(name, "name must not be null");
+        Assert.notNull(content, "content must not be null");
+
+        this.name = name;
+        this.content = content;
     }
 
     @Nullable
     @Override
     public byte[] getAsBytes(@NotNull String key) {
-        return cache.computeIfAbsent(key, delegate::getAsBytes);
+        Assert.notNull(key, "key must not be null");
+
+        if (!Secret.isValidSecretKey(key)) {
+            return null;
+        }
+
+        return content.get(key);
     }
 
     @NotNull
     @Override
     public String getName() {
-        return delegate.getName();
+        return name;
     }
 
     @Generated
@@ -58,22 +68,22 @@ public final class CacheBinding implements Binding {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        CacheBinding that = (CacheBinding) o;
-        return delegate.equals(that.delegate);
+        MapBinding that = (MapBinding) o;
+        return name.equals(that.name);
     }
 
     @Generated
     @Override
     public int hashCode() {
-        return Objects.hash(delegate);
+        return Objects.hash(name);
     }
 
     @Generated
     @NotNull
     @Override
     public String toString() {
-        return "CacheBinding{" +
-            "delegate=" + delegate +
+        return "MapBinding{" +
+            "name='" + name + '\'' +
             '}';
     }
 

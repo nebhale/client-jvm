@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package binding.service;
+package com.nebhale.bindings;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

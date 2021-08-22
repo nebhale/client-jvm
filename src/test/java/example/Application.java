@@ -16,8 +16,8 @@
 
 package example;
 
-import binding.service.Binding;
-import binding.service.Bindings;
+import com.nebhale.bindings.Binding;
+import com.nebhale.bindings.Bindings;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

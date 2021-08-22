@@ -14,32 +14,27 @@
  * limitations under the License.
  */
 
-package binding.service;
+package com.nebhale.bindings;
 
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.stream.Collectors;
+final class Assert {
 
-final class FluentMap extends HashMap<String, String> {
-
-    @NotNull
-    public FluentMap withEntry(@NotNull String key, @Nullable String value) {
-        Assert.notNull(key, "key must not be null");
-
-        put(key, value);
-        return this;
+    private Assert() {
     }
 
-    public Map<String, byte[]> asBytes() {
-        return this.entrySet().stream()
-            .collect(Collectors.toMap(
-                Entry::getKey,
-                e -> e.getValue().getBytes(StandardCharsets.UTF_8)
-            ));
+    /**
+     * Assert that an object is not {@code null}.
+     * <pre class="code">Assert.notNull(clazz, "The class must not be null");</pre>
+     *
+     * @param object  the object to check
+     * @param message the exception message to use if the assertion fails
+     * @throws IllegalArgumentException if the object is {@code null}
+     */
+    static void notNull(@Nullable Object object, String message) {
+        if (object == null) {
+            throw new IllegalArgumentException(message);
+        }
     }
 
 }
