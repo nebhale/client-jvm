@@ -51,12 +51,12 @@ publishing {
 
             pom {
                 groupId = "com.nebhale.bindings"
-                artifactId = "client-java"
+                artifactId = "client-jvm"
                 version = "1.0.0"
 
                 name.set("Service Bindings for Kubernetes")
                 description.set("A library to access Service Binding Specification for Kubernetes conformant Service Binding Workload Projections.")
-                url.set("https://github.com/nebhale/client-java")
+                url.set("https://github.com/nebhale/client-jvm")
 
                 licenses {
                     license {
@@ -74,9 +74,9 @@ publishing {
                 }
 
                 scm {
-                    connection.set("scm:git:https://github.com/nebhale/client-java.git")
-                    developerConnection.set("scm:git:https://github.com/nebhale/client-java.git")
-                    url.set("https://github.com/nebhale/client-java")
+                    connection.set("scm:git:https://github.com/nebhale/client-jvm.git")
+                    developerConnection.set("scm:git:https://github.com/nebhale/client-jvm.git")
+                    url.set("https://github.com/nebhale/client-jvm")
                 }
             }
         }
