@@ -25,8 +25,7 @@ jobs:
     - uses: gradle/wrapper-validation-action@v1
     - name: Build with Gradle
       run: ./gradlew build
-    - name: Report coverage
-      run: bash <(curl -s https://codecov.io/bash)
+    - uses: codecov/codecov-action@v2
     - name: Cleanup Gradle Cache
       run: |
         rm -f ~/.gradle/caches/modules-2/modules-2.lock
