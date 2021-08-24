@@ -50,8 +50,8 @@ publishing {
             from(components["java"])
 
             pom {
-                groupId = "com.nebhale.bindings"
-                artifactId = "client-jvm"
+                groupId = "com.nebhale"
+                artifactId = "service-bindings"
                 version = "1.0.0"
 
                 name.set("Service Bindings for Kubernetes")
