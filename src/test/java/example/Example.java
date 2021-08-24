@@ -23,13 +23,13 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class Application {
+public class Example {
 
     public static void main(String[] args) {
         Binding[] bindings = Bindings.fromServiceBindingRoot();
         bindings = Bindings.filter(bindings, "postgresql");
         if (bindings.length != 1) {
-            System.err.printf("Incorrect number of PostgreSQL drivers: %d\n", bindings.length);
+            System.err.printf("Incorrect number of PostgreSQL bindings: %d\n", bindings.length);
             System.exit(1);
         }
 
