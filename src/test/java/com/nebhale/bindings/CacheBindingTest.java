@@ -39,7 +39,7 @@ final class CacheBindingTest {
 
     @Test
     @DisplayName("not cache unknown keys")
-    void unknownKey() {
+    void missingKey() {
         assertThat(binding.get("test-unknown-key")).isNull();
         assertThat(binding.get("test-unknown-key")).isNull();
         assertThat(stub.getAsBytesCount).isEqualTo(2);
