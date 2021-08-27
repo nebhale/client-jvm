@@ -16,7 +16,6 @@
 
 package com.nebhale.bindings;
 
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.nio.charset.StandardCharsets;
@@ -24,47 +23,34 @@ import java.nio.file.Paths;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@DisplayName("ConfigTree Binding")
 final class ConfigTreeBindingTest {
-
-    private final ConfigTreeBinding binding = new ConfigTreeBinding(Paths.get("src/test/resources/test-k8s"));
-
     @Test
-    @DisplayName("returns well-known content")
-    void wellKnownContent() {
-        assertThat(binding.getName()).isEqualTo("test-k8s");
-        assertThat(binding.getProvider()).isEqualTo("test-provider-1");
-        assertThat(binding.getType()).isEqualTo("test-type-1");
+    void missing() {
+        ConfigTreeBinding b = new ConfigTreeBinding(Paths.get("src/test/resources/test-k8s"));
+        assertThat(b.getAsBytes("test-missing-key")).isNull();
     }
 
     @Test
-    @DisplayName("returns binding-specific content")
-    void content() {
-        assertThat(binding.get("test-secret-key")).isEqualTo("test-secret-value");
-    }
-
-    @Test
-    @DisplayName("returns null for missing key")
-    void missingKey() {
-        assertThat(binding.get("test-missing-key")).isNull();
-    }
-
-    @Test
-    @DisplayName("returns null for directory")
     void directory() {
-        assertThat(binding.get(".hidden-data")).isNull();
+        ConfigTreeBinding b = new ConfigTreeBinding(Paths.get("src/test/resources/test-k8s"));
+        assertThat(b.getAsBytes(".hidden-data")).isNull();
     }
 
     @Test
-    @DisplayName("returns null for invalid key")
-    void invalidKey() {
-        assertThat(binding.get("test^invalid^key")).isNull();
+    void invalid() {
+        ConfigTreeBinding b = new ConfigTreeBinding(Paths.get("src/test/resources/test-k8s"));
+        assertThat(b.getAsBytes("test^invalid^key")).isNull();
     }
 
     @Test
-    @DisplayName("returns bytes")
-    void bytes() {
-        assertThat(binding.getAsBytes("test-secret-key")).isEqualTo("test-secret-value\n".getBytes(StandardCharsets.UTF_8));
+    void valid() {
+        ConfigTreeBinding b = new ConfigTreeBinding(Paths.get("src/test/resources/test-k8s"));
+        assertThat(b.getAsBytes("test-secret-key")).isEqualTo("test-secret-value\n".getBytes(StandardCharsets.UTF_8));
     }
 
+    @Test
+    void getName() {
+        ConfigTreeBinding b = new ConfigTreeBinding(Paths.get("src/test/resources/test-k8s"));
+        assertThat(b.getName()).isEqualTo("test-k8s");
+    }
 }

@@ -16,7 +16,7 @@
 
 package com.nebhale.bindings;
 
-import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
@@ -24,64 +24,58 @@ import java.util.Collections;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
 
-@DisplayName("Binding")
 final class BindingTest {
+    @Nested
+    final class Get {
+        @Test
+        void missing() {
+            Binding b = new MapBinding("test-name", Collections.emptyMap());
+            assertThat(b.get("test-missing-key")).isNull();
+        }
 
-    @Test
-    @DisplayName("missing key")
-    void missingKey() {
-        Binding b = new MapBinding("test-name", Collections.emptyMap());
-
-        assertThat(b.get("test-key")).isNull();
-    }
-
-    @Test
-    @DisplayName("valid key")
-    void valid() {
-        Binding b = new MapBinding("test-name",
-            new FluentMap()
+        @Test
+        void valid() {
+            Binding b = new MapBinding("test-name", new FluentMap()
                 .withEntry("test-key", "test-value")
                 .asBytes());
 
-        assertThat(b.get("test-key")).isEqualTo("test-value");
+            assertThat(b.get("test-key")).isEqualTo("test-value");
+        }
     }
 
-    @Test
-    @DisplayName("get provider doesn't exist")
-    void getProviderNonExist() {
-        Binding b = new MapBinding("test-name", Collections.emptyMap());
+    @Nested
+    final class GetProvider {
+        @Test
+        void missing() {
+            Binding b = new MapBinding("test-name", Collections.emptyMap());
+            assertThat(b.getProvider()).isNull();
+        }
 
-        assertThat(b.getProvider()).isNull();
-    }
-
-    @Test
-    @DisplayName("get provider exists")
-    void getProviderExists() {
-        Binding b = new MapBinding("test-name",
-            new FluentMap()
+        @Test
+        void valid() {
+            Binding b = new MapBinding("test-name", new FluentMap()
                 .withEntry("provider", "test-provider")
                 .asBytes());
 
-        assertThat(b.getProvider()).isEqualTo("test-provider");
+            assertThat(b.getProvider()).isEqualTo("test-provider");
+        }
     }
 
-    @Test
-    @DisplayName("get type invalid binding")
-    void getTypeInvalidBinding() {
-        Binding b = new MapBinding("test-name", Collections.emptyMap());
+    @Nested
+    final class GetType {
+        @Test
+        void invalid() {
+            Binding b = new MapBinding("test-name", Collections.emptyMap());
+            assertThatIllegalStateException().isThrownBy(b::getType);
+        }
 
-        assertThatIllegalStateException().isThrownBy(b::getType);
-    }
-
-    @Test
-    @DisplayName("get type valid binding")
-    void getTypeValidBinding() {
-        Binding b = new MapBinding("test-name",
-            new FluentMap()
+        @Test
+        void valid() {
+            Binding b = new MapBinding("test-name", new FluentMap()
                 .withEntry("type", "test-type")
                 .asBytes());
 
-        assertThat(b.getType()).isEqualTo("test-type");
+            assertThat(b.getType()).isEqualTo("test-type");
+        }
     }
-
 }

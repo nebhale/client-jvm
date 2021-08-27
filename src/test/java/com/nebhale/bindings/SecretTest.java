@@ -16,17 +16,14 @@
 
 package com.nebhale.bindings;
 
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@DisplayName("Secret")
 final class SecretTest {
 
-    @DisplayName("valid")
     @Test
-    void valid() {
+    void isValidSecretKey_valid() {
         String[] valid = new String[]{
             "alpha",
             "BRAVO",
@@ -43,9 +40,8 @@ final class SecretTest {
         }
     }
 
-    @DisplayName("invalid")
     @Test
-    void invalid() {
+    void isValidSecretKey_invalid() {
         String[] invalid = new String[]{
             "lima^mike"
         };

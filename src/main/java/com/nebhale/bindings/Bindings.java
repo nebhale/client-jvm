@@ -117,19 +117,6 @@ public final class Bindings {
     }
 
     /**
-     * Returns zero or more {@link Binding}s with a given type.  Equivalent to
-     * {@link #filter(Binding[], String, String)} with a {@code null} {@code provider}.
-     *
-     * @param bindings the {@link Binding}s to filter
-     * @param type     the type of the {@code Binding} to find
-     * @return the collection of {@code Binding}s with a given type
-     */
-    @NotNull
-    public static Binding[] filter(@NotNull Binding[] bindings, @Nullable String type) {
-        return filter(bindings, type, null);
-    }
-
-    /**
      * Return zero or more {@link Binding}s with a given type and provider.  If {@code type} or {@code provider} are
      * {@code null}, the result is not filtered on that argument.  Comparisons are case-insensitive.
      *
@@ -146,6 +133,19 @@ public final class Bindings {
             .filter(b -> type == null || b.getType().equalsIgnoreCase(type))
             .filter(b -> provider == null || b.getProvider() != null && b.getProvider().equalsIgnoreCase(provider))
             .toArray(Binding[]::new);
+    }
+
+    /**
+     * Returns zero or more {@link Binding}s with a given type.  Equivalent to
+     * {@link #filter(Binding[], String, String)} with a {@code null} {@code provider}.
+     *
+     * @param bindings the {@link Binding}s to filter
+     * @param type     the type of the {@code Binding} to find
+     * @return the collection of {@code Binding}s with a given type
+     */
+    @NotNull
+    public static Binding[] filter(@NotNull Binding[] bindings, @Nullable String type) {
+        return filter(bindings, type, null);
     }
 
 }

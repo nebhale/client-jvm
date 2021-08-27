@@ -16,54 +16,38 @@
 
 package com.nebhale.bindings;
 
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@DisplayName("Map Binding")
 final class MapBindingTest {
+    @Test
+    void missing() {
+        MapBinding b = new MapBinding("test-name", Collections.emptyMap());
+        assertThat(b.getAsBytes("test-missing-key")).isNull();
+    }
 
-    private final MapBinding binding = new MapBinding("test-name",
-        new FluentMap()
-            .withEntry("provider", "test-provider-1")
+    @Test
+    void invalid() {
+        MapBinding b = new MapBinding("test-name", Collections.emptyMap());
+        assertThat(b.getAsBytes("test^invalid^key")).isNull();
+    }
+
+    @Test
+    void valid() {
+        MapBinding b = new MapBinding("test-name", new FluentMap()
             .withEntry("test-secret-key", "test-secret-value\n")
-            .withEntry("type", "test-type-1")
-            .asBytes()
-    );
+            .asBytes());
 
-    @Test
-    @DisplayName("returns well-known content")
-    void wellKnownContent() {
-        assertThat(binding.getName()).isEqualTo("test-name");
-        assertThat(binding.getProvider()).isEqualTo("test-provider-1");
-        assertThat(binding.getType()).isEqualTo("test-type-1");
+        assertThat(b.getAsBytes("test-secret-key")).isEqualTo("test-secret-value\n".getBytes(StandardCharsets.UTF_8));
     }
 
     @Test
-    @DisplayName("returns binding-specific content")
-    void content() {
-        assertThat(binding.get("test-secret-key")).isEqualTo("test-secret-value");
+    void getName() {
+        MapBinding b = new MapBinding("test-name", Collections.emptyMap());
+        assertThat(b.getName()).isEqualTo("test-name");
     }
-
-    @Test
-    @DisplayName("returns null for missing key")
-    void missingKey() {
-        assertThat(binding.get("test-missing-key")).isNull();
-    }
-
-    @Test
-    @DisplayName("returns null for invalid key")
-    void invalidKey() {
-        assertThat(binding.get("test^invalid^key")).isNull();
-    }
-
-    @Test
-    @DisplayName("returns bytes")
-    void bytes() {
-        assertThat(binding.getAsBytes("test-secret-key")).isEqualTo("test-secret-value\n".getBytes(StandardCharsets.UTF_8));
-    }
-
 }

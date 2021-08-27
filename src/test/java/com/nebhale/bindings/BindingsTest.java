@@ -16,77 +16,59 @@
 
 package com.nebhale.bindings;
 
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@DisplayName("Bindings")
 final class BindingsTest {
-
-    private final Path root = Paths.get("src/test/resources");
-
     @Test
-    @DisplayName("wraps with cached binding")
     void cached() {
         Binding[] bindings = Bindings.cached(new Binding[]{
-            new MapBinding("test-name-1", Collections.emptyMap())
+            new MapBinding("test-name-1", Collections.emptyMap()),
+            new MapBinding("test-name-2", Collections.emptyMap())
         });
 
         for (Binding binding : bindings) {
             assertThat(binding).isInstanceOf(CacheBinding.class);
         }
-
     }
 
     @Nested
-    @DisplayName("from")
     final class From {
-
         @Test
-        @DisplayName("empty if path does not exist")
-        void nonExistentDirectory() {
-            assertThat(Bindings.from(root.resolve("non-existent"))).isEmpty();
+        void missing() {
+            assertThat(Bindings.from(Paths.get("src/test/resources/missing"))).isEmpty();
         }
 
         @Test
-        @DisplayName("empty if path is not a directory")
-        void nonDirectory() throws IOException {
-            assertThat(Bindings.from(root.resolve("additional-file"))).isEmpty();
+        void file() {
+            assertThat(Bindings.from(Paths.get("src/test/resources/additional-file"))).isEmpty();
         }
 
         @Test
-        @DisplayName("populates content")
-        void construct() {
-            assertThat(Bindings.from(root)).hasSize(3);
+        void valid() {
+            assertThat(Bindings.from(Paths.get("src/test/resources"))).hasSize(3);
         }
-
     }
 
     @Nested
-    @DisplayName("from service binding root")
     final class FromServiceBindingRoot {
-
         @Test
-        @DisplayName("empty if not set")
-        void empty() {
+        void unset() {
             assertThat(Bindings.fromServiceBindingRoot()).isEmpty();
         }
 
         @Test
-        @DisplayName("populates content")
-        void construct() throws Exception {
+        void set() throws Exception {
             String old = System.getenv("SERVICE_BINDING_ROOT");
-            getModifiableEnvironment().put("SERVICE_BINDING_ROOT", root.toString());
+            getModifiableEnvironment().put("SERVICE_BINDING_ROOT", "src/test/resources");
 
             try {
                 assertThat(Bindings.fromServiceBindingRoot()).hasSize(3);
@@ -112,57 +94,147 @@ final class BindingsTest {
 
             return (Map<String, String>) m.get(unmodifiableEnvironment);
         }
-
     }
 
     @Nested
-    @DisplayName("with content")
-    final class Content {
+    final class Find {
+        @Test
+        void missing() {
+            Binding[] bindings = new Binding[]{
+                new MapBinding("test-name-1", Collections.emptyMap()),
+            };
 
-        private final Binding[] bindings = new Binding[]{
-            new MapBinding("test-name-1",
-                new FluentMap()
+            assertThat(Bindings.find(bindings, "test-name-2")).isNull();
+        }
+
+        @Test
+        @SuppressWarnings("ConstantConditions")
+        void valid() {
+            Binding[] bindings = new Binding[]{
+                new MapBinding("test-name-1", Collections.emptyMap()),
+                new MapBinding("test-name-2", Collections.emptyMap()),
+            };
+
+            assertThat(Bindings.find(bindings, "test-name-1").getName()).isEqualTo("test-name-1");
+        }
+    }
+
+    @Nested
+    final class Filter {
+        @Test
+        void none() {
+            Binding[] b = new Binding[]{
+                new MapBinding("test-name-1", new FluentMap()
                     .withEntry("type", "test-type-1")
                     .withEntry("provider", "test-provider-1")
                     .asBytes()
-            ),
-            new MapBinding("test-name-2",
-                new FluentMap()
+                ),
+                new MapBinding("test-name-2", new FluentMap()
+                    .withEntry("type", "test-type-1")
+                    .withEntry("provider", "test-provider-2")
+                    .asBytes()
+                ),
+                new MapBinding("test-name-3", new FluentMap()
                     .withEntry("type", "test-type-2")
                     .withEntry("provider", "test-provider-2")
                     .asBytes()
-            ),
-            new MapBinding("test-name-3",
-                new FluentMap()
-                    .withEntry("type", "test-type-3")
+                )
+            };
+
+            assertThat(Bindings.filter(b, null, null)).hasSize(3);
+        }
+
+        @Test
+        void type() {
+            Binding[] b = new Binding[]{
+                new MapBinding("test-name-1", new FluentMap()
+                    .withEntry("type", "test-type-1")
+                    .withEntry("provider", "test-provider-1")
                     .asBytes()
-            )
-        };
+                ),
+                new MapBinding("test-name-2", new FluentMap()
+                    .withEntry("type", "test-type-1")
+                    .withEntry("provider", "test-provider-2")
+                    .asBytes()
+                ),
+                new MapBinding("test-name-3", new FluentMap()
+                    .withEntry("type", "test-type-2")
+                    .withEntry("provider", "test-provider-2")
+                    .asBytes()
+                )
+            };
 
-        @Test
-        @DisplayName("find")
-        void find() {
-            assertThat(Bindings.find(bindings, "test-name-1")).isNotNull();
+            assertThat(Bindings.filter(b, "test-type-1", null)).hasSize(2);
         }
 
         @Test
-        @DisplayName("filters bindings by type")
-        void filterByType() {
-            assertThat(Bindings.filter(bindings, "test-type-1")).hasSize(1);
+        void provider() {
+            Binding[] b = new Binding[]{
+                new MapBinding("test-name-1", new FluentMap()
+                    .withEntry("type", "test-type-1")
+                    .withEntry("provider", "test-provider-1")
+                    .asBytes()
+                ),
+                new MapBinding("test-name-2", new FluentMap()
+                    .withEntry("type", "test-type-1")
+                    .withEntry("provider", "test-provider-2")
+                    .asBytes()
+                ),
+                new MapBinding("test-name-3", new FluentMap()
+                    .withEntry("type", "test-type-2")
+                    .withEntry("provider", "test-provider-2")
+                    .asBytes()
+                )
+            };
+
+            assertThat(Bindings.filter(b, null, "test-provider-2")).hasSize(2);
         }
 
         @Test
-        @DisplayName("filters bindings by type and provider")
-        void filterByTypeAndProvider() {
-            assertThat(Bindings.filter(bindings, "test-type-1", "test-provider-1")).hasSize(1);
+        void typeAndProvider() {
+
+            Binding[] b = new Binding[]{
+                new MapBinding("test-name-1", new FluentMap()
+                    .withEntry("type", "test-type-1")
+                    .withEntry("provider", "test-provider-1")
+                    .asBytes()
+                ),
+                new MapBinding("test-name-2", new FluentMap()
+                    .withEntry("type", "test-type-1")
+                    .withEntry("provider", "test-provider-2")
+                    .asBytes()
+                ),
+                new MapBinding("test-name-3", new FluentMap()
+                    .withEntry("type", "test-type-2")
+                    .withEntry("provider", "test-provider-2")
+                    .asBytes()
+                )
+            };
+
+            assertThat(Bindings.filter(b, "test-type-1", "test-provider-1")).hasSize(1);
         }
 
         @Test
-        @DisplayName("filters bindings by provider")
-        void filterByProvider() {
-            assertThat(Bindings.filter(bindings, null, "test-provider-1")).hasSize(1);
-        }
+        void overload() {
+            Binding[] b = new Binding[]{
+                new MapBinding("test-name-1", new FluentMap()
+                    .withEntry("type", "test-type-1")
+                    .withEntry("provider", "test-provider-1")
+                    .asBytes()
+                ),
+                new MapBinding("test-name-2", new FluentMap()
+                    .withEntry("type", "test-type-1")
+                    .withEntry("provider", "test-provider-2")
+                    .asBytes()
+                ),
+                new MapBinding("test-name-3", new FluentMap()
+                    .withEntry("type", "test-type-2")
+                    .withEntry("provider", "test-provider-2")
+                    .asBytes()
+                )
+            };
 
+            assertThat(Bindings.filter(b, "test-type-1")).hasSize(2);
+        }
     }
-
 }
