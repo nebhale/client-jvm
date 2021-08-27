@@ -231,7 +231,6 @@ final class BindingsTest {
 
         @Test
         void typeAndProvider() {
-
             Binding[] b = new Binding[]{
                 new MapBinding("test-name-1", new FluentMap()
                     .withEntry("type", "test-type-1")
