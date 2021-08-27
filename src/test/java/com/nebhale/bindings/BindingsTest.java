@@ -246,7 +246,11 @@ final class BindingsTest {
                     .withEntry("type", "test-type-2")
                     .withEntry("provider", "test-provider-2")
                     .asBytes()
-                )
+                ),
+                new MapBinding("test-name-4", new FluentMap()
+                    .withEntry("type", "test-type-2")
+                    .asBytes()
+                ),
             };
 
             assertThat(Bindings.filter(b, "test-type-1")).hasSize(2);
