@@ -67,32 +67,7 @@ final class BindingsTest {
 
         @Test
         void set() throws Exception {
-            String old = System.getenv("SERVICE_BINDING_ROOT");
-            getModifiableEnvironment().put("SERVICE_BINDING_ROOT", "src/test/resources");
-
-            try {
-                assertThat(Bindings.fromServiceBindingRoot()).hasSize(3);
-            } finally {
-                if (old != null) {
-                    getModifiableEnvironment().put("SERVICE_BINDING_ROOT", old);
-                } else {
-                    getModifiableEnvironment().remove("SERVICE_BINDING_ROOT");
-                }
-            }
-        }
-
-        @SuppressWarnings("unchecked")
-        private Map<String, String> getModifiableEnvironment() throws Exception {
-            Class<?> pe = Class.forName("java.lang.ProcessEnvironment");
-            Method getenv = pe.getDeclaredMethod("getenv");
-            getenv.setAccessible(true);
-
-            Object unmodifiableEnvironment = getenv.invoke(null);
-            Class<?> map = Class.forName("java.util.Collections$UnmodifiableMap");
-            Field m = map.getDeclaredField("m");
-            m.setAccessible(true);
-
-            return (Map<String, String>) m.get(unmodifiableEnvironment);
+            assertThat(Bindings.fromServiceBindingRoot("src/test/resources")).hasSize(3);
         }
     }
 

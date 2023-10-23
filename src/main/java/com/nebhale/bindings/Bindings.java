@@ -90,7 +90,10 @@ public final class Bindings {
      */
     @NotNull
     public static Binding[] fromServiceBindingRoot() {
-        String root = System.getenv(SERVICE_BINDING_ROOT);
+        return Bindings.fromServiceBindingRoot(System.getenv(SERVICE_BINDING_ROOT));
+    }
+
+    static Binding[] fromServiceBindingRoot(String root) {
         if (root == null) {
             return new Binding[0];
         }
