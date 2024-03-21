@@ -3,7 +3,7 @@
 [![Tests](https://github.com/nebhale/client-jvm/workflows/Tests/badge.svg?branch=main)](https://github.com/nebhale/client-jvm/actions/workflows/tests.yaml)
 [![codecov](https://codecov.io/gh/nebhale/client-jvm/branch/main/graph/badge.svg)](https://codecov.io/gh/nebhale/client-jvm)
 
-`client-jvm` is a library to access [Service Binding Specification for Kubernetes](https://k8s-service-bindings.github.io/spec/) conformant Service Binding [Workload Projections](https://k8s-service-bindings.github.io/spec/#workload-projection).
+`client-jvm` is a library to access [Service Binding Specification for Kubernetes](https://servicebinding.io/spec/core/1.1.0/)  conformant Service Binding [Workload Projections](https://servicebinding.io/spec/core/1.1.0/#workload-projection).
 
 ## Example
 
