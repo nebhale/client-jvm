@@ -6,10 +6,10 @@ plugins {
 }
 
 dependencies {
-    compileOnly("org.jetbrains:annotations:26.0.0")
+    compileOnly("org.jetbrains:annotations:26.0.1")
 
     testImplementation("org.assertj:assertj-core:3.26.3")
-    testImplementation("org.jetbrains:annotations:26.0.0")
+    testImplementation("org.jetbrains:annotations:26.0.1")
     testImplementation("org.junit.jupiter:junit-jupiter:5.11.2")
     testImplementation("org.postgresql:postgresql:42.7.4")
 
