@@ -8,8 +8,6 @@ updates:
   labels:
   - dependencies
   - github-actions
-  reviewers:
-  - nebhale
 
 - package-ecosystem: gradle
   directory: /
@@ -18,5 +16,3 @@ updates:
   labels:
   - dependencies
   - gradle
-  reviewers:
-  - nebhale
