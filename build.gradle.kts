@@ -11,7 +11,7 @@ dependencies {
     testImplementation("org.assertj:assertj-core:3.27.3")
     testImplementation("org.jetbrains:annotations:26.0.2")
     testImplementation("org.junit.jupiter:junit-jupiter:5.12.2")
-    testImplementation("org.postgresql:postgresql:42.7.5")
+    testImplementation("org.postgresql:postgresql:42.7.6")
 
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
