@@ -40,7 +40,7 @@ tasks.jacocoTestReport {
 }
 
 tasks.javadoc {
-    (options as StandardJavadocDocletOptions).links?.add("https://docs.oracle.com/en/java/javase/11/docs/api/")
+    (options as StandardJavadocDocletOptions).links?.add("https://docs.oracle.com/en/java/javase/21/docs/api/")
 }
 
 repositories {
